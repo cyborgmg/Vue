@@ -1,17 +1,21 @@
 <template>
 
-  <div class="corpo">
+  <div>
 
     <h1 class="centralizado" >{{titulo}}</h1>
 
-    <input type="search" class="filtro" placeholder="Filtre por parte do titulo" v-on:input="filtro = $event.target.value" >
+    <input type="search" class="filtro" placeholder="Filtre por parte do titulo" @input="filtro = $event.target.value" >
     {{ filtro }}
     <ul class="lista-fotos">
 
       <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
 
         <meu-painel :titulo="foto.titulo" >
-            <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo">
+
+          <imagem-responsiva :url="foto.url" :titulo="foto.titulo" />
+
+          <meu-botao tipo="button" rotulo="REMOVER" :confirmacao="false" estilo="padrao" @botaoAtivado="remove(foto)" />
+
         </meu-painel>
 
       </li>
@@ -23,12 +27,16 @@
 </template>
 
 <script>
-import Painel from './componentes/shared/painel/Painel.vue';
+import Painel from '../shared/painel/Painel.vue';
+import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue';
+import Botao from '../shared/botao/Botao.vue';
 
 export default {
 
   components: {
-    'meu-painel' : Painel
+    'meu-painel' : Painel,
+    'imagem-responsiva' : ImagemResponsiva,
+    'meu-botao' : Botao
   },
   
   data(){
@@ -54,6 +62,14 @@ export default {
         return this.fotos;
       }
     }
+  },
+
+  methods: {
+
+      remove(foto){
+          alert(foto.titulo);
+      }
+
   }
 
 }
@@ -64,22 +80,12 @@ export default {
     text-align: center;
   }
 
-  .corpo {
-    font-family: Helvetica, sans-serif;
-    margin: 0 auto;
-    width: 96%;
-  }
-
   .lista-fotos {
     list-style: none;
   }
 
   .lista-fotos .lista-fotos-item {
     display: inline-block;
-  }
-
-  .imagem-responsiva {
-    width: 100%;
   }
 
   .filtro {
