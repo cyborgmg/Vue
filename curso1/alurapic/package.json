@@ -1,8 +1,8 @@
 {
   "name": "alurapic",
-  "description": "A Vue.js project",
+  "description": "Alura Vue",
   "version": "1.0.0",
-  "author": "",
+  "author": "Wellington Santos <wellington.gsantos@outlook.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "vue": "^2.5.11",
-    "vue-resource": "^1.0.3",
-    "vue-router": "^2.1.1"
+    "vue-resource": "^1.0.3"
   },
   "browserslist": [
     "> 1%",
@@ -27,6 +26,8 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
     "webpack": "^3.6.0",

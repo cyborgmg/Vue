@@ -4,6 +4,8 @@
 
     <h1 class="centralizado" >{{titulo}}</h1>
 
+    <p v-show="mensagem" class="centralizado">{{mensagem}}</p>
+
     <input type="search" class="filtro" placeholder="Filtre por parte do titulo" @input="filtro = $event.target.value" >
     {{ filtro }}
     <ul class="lista-fotos">
@@ -12,9 +14,9 @@
 
         <meu-painel :titulo="foto.titulo" >
 
-          <imagem-responsiva :url="foto.url" :titulo="foto.titulo" />
+          <imagem-responsiva v-meu-transform:scale.animate="1.2" :url="foto.url" :titulo="foto.titulo" />
 
-          <meu-botao tipo="button" rotulo="REMOVER" :confirmacao="false" estilo="padrao" @botaoAtivado="remove(foto)" />
+          <meu-botao tipo="button" rotulo="REMOVER" :confirmacao="true" estilo="perigo" @botaoAtivado="remove(foto)" />
 
         </meu-painel>
 
@@ -30,6 +32,9 @@
 import Painel from '../shared/painel/Painel.vue';
 import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue';
 import Botao from '../shared/botao/Botao.vue';
+import FotoService from '../../domain/foto/FotoService';
+
+//import Transform from '../../directives/Transform';
 
 export default {
 
@@ -38,19 +43,26 @@ export default {
     'imagem-responsiva' : ImagemResponsiva,
     'meu-botao' : Botao
   },
-  
+/*
+  directives: {
+    'meu-transform': Transform
+  },
+*/  
   data(){
     return{
       titulo: 'Alurapic', 
       fotos: [],
-      filtro: ''
+      filtro: '',
+      mensagem:''
     }
   },
 
   created(){
-    this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())
+
+    this.service = new FotoService(this.$resource)
+    this.service.lista()
       .then(fotos => this.fotos = fotos, err => console.log(err) );
+
   },
 
   computed: {
@@ -67,7 +79,19 @@ export default {
   methods: {
 
       remove(foto){
-          alert(foto.titulo);
+
+          //this.resource.delete({id: foto._id})
+          this.service.apaga(foto._id)
+          .then(()=>{ 
+              let index = this.fotos.indexOf(foto);
+              this.fotos.splice(index,1);
+              this.mensagem='Foto removida com sucesso!';
+            }, 
+            err => {
+              console.log(err);
+              this.mensagem='Erro! não foi possível remover foto.';
+            });
+
       }
 
   }
