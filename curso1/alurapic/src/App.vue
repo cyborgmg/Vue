@@ -17,7 +17,7 @@
 <script>
 
 import { routes } from './routes';
-import Menu from './componentes/shared/menu/Menu.vue';
+import Menu from './components/shared/menu/Menu.vue';
 
 export default {
   components: {
@@ -25,7 +25,7 @@ export default {
   },
   data(){
     return{
-      routes
+      routes : routes.filter(route => route.menu)
     }
   }
 

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-
+    <img src="/static/teste.png"/>
     <h1 class="centralizado" >{{titulo}}</h1>
 
     <p v-show="mensagem" class="centralizado">{{mensagem}}</p>
@@ -10,11 +10,15 @@
     {{ filtro }}
     <ul class="lista-fotos">
 
-      <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
+      <li class="lista-fotos-item" v-for="foto of fotosComFiltro" :key="foto._id">
 
         <meu-painel :titulo="foto.titulo" >
 
           <imagem-responsiva v-meu-transform:scale.animate="1.2" :url="foto.url" :titulo="foto.titulo" />
+
+          <router-link :to="{name : 'altera', params:{id:foto._id}}">
+            <meu-botao tipo="button" rotulo="ALTERAR" estilo="padrao" />
+          </router-link>
 
           <meu-botao tipo="button" rotulo="REMOVER" :confirmacao="true" estilo="perigo" @botaoAtivado="remove(foto)" />
 
@@ -60,8 +64,9 @@ export default {
   created(){
 
     this.service = new FotoService(this.$resource)
+
     this.service.lista()
-      .then(fotos => this.fotos = fotos, err => console.log(err) );
+      .then(fotos => this.fotos = fotos, err => this.mensagem = err.message );
 
   },
 
@@ -80,7 +85,6 @@ export default {
 
       remove(foto){
 
-          //this.resource.delete({id: foto._id})
           this.service.apaga(foto._id)
           .then(()=>{ 
               let index = this.fotos.indexOf(foto);
@@ -88,8 +92,7 @@ export default {
               this.mensagem='Foto removida com sucesso!';
             }, 
             err => {
-              console.log(err);
-              this.mensagem='Erro! não foi possível remover foto.';
+              this.mensagem=err.message;
             });
 
       }
